@@ -130,10 +130,45 @@ const observer = new IntersectionObserver(function (entries) {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       entry.target.classList.add("visible");
+
+      // Special handling for projects section on mobile
+      if (entry.target.id === "projects" && window.innerWidth <= 768) {
+        entry.target.style.opacity = "1";
+        entry.target.style.transform = "none";
+
+        // Ensure all project items are visible
+        const projectItems = entry.target.querySelectorAll(".project-item");
+        projectItems.forEach((item) => {
+          item.style.opacity = "1";
+          item.style.transform = "none";
+        });
+      }
     }
   });
 }, observerOptions);
 
+// Initialize all fade-in elements
 document.querySelectorAll(".fade-in").forEach((el) => {
   observer.observe(el);
 });
+
+// Mobile-specific initialization
+function initializeMobileProjects() {
+  if (window.innerWidth <= 768) {
+    const projectsSection = document.getElementById("projects");
+    if (projectsSection) {
+      projectsSection.style.opacity = "1";
+      projectsSection.style.transform = "none";
+
+      const projectItems = projectsSection.querySelectorAll(".project-item");
+      projectItems.forEach((item) => {
+        item.style.opacity = "1";
+        item.style.transform = "none";
+      });
+    }
+  }
+}
+
+// Call on load and resize
+window.addEventListener("load", initializeMobileProjects);
+window.addEventListener("resize", initializeMobileProjects);
